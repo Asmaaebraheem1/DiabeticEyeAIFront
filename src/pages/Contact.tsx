@@ -11,18 +11,40 @@ const Contact: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setValidationErrors({});
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (errorData.details) {
+          setValidationErrors(errorData.details);
+          return; // Don't throw error to prevent alert
+        }
+        throw new Error(errorData.error || 'Failed to submit form');
+      }
+      
       setSubmitSuccess(true);
       setFormData({
         name: '',
@@ -35,7 +57,16 @@ const Contact: React.FC = () => {
       setTimeout(() => {
         setSubmitSuccess(false);
       }, 5000);
-    }, 1500);
+    } catch (error: unknown) {
+      console.error('Submission error:', error);
+      if (error instanceof Error) {
+        alert(error.message || 'An error occurred while submitting the form');
+      } else {
+        alert('An unknown error occurred while submitting the form');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   return (
@@ -139,8 +170,15 @@ const Contact: React.FC = () => {
                           value={formData.name}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className={`w-full px-4 py-2 border ${
+                            validationErrors.name ? 'border-red-500' : 'border-gray-300'
+                          } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
+                        <div className="h-5">
+                          {validationErrors.name && (
+                            <p className="mt-1 text-sm text-red-600">{validationErrors.name}</p>
+                          )}
+                        </div>
                       </div>
                       
                       <div>
@@ -154,8 +192,13 @@ const Contact: React.FC = () => {
                           value={formData.email}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className={`w-full px-4 py-2 border ${
+                            validationErrors.email ? 'border-red-500' : 'border-gray-300'
+                          } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
+                        {validationErrors.email && (
+                          <p className="mt-1 text-sm text-red-600">{validationErrors.email}</p>
+                        )}
                       </div>
                       
                       <div>
@@ -189,8 +232,13 @@ const Contact: React.FC = () => {
                           value={formData.message}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className={`w-full px-4 py-2 border ${
+                            validationErrors.message ? 'border-red-500' : 'border-gray-300'
+                          } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         ></textarea>
+                        {validationErrors.message && (
+                          <p className="mt-1 text-sm text-red-600">{validationErrors.message}</p>
+                        )}
                       </div>
                       
                       <button
