@@ -64,22 +64,58 @@ const InputForm: React.FC<InputFormProps> = ({ onResultGenerated }) => {
     
     setIsLoading(true);
     
-    setTimeout(() => {
-      setIsLoading(false);
-      
-      let resultImageUrl = 'https://images.pexels.com/photos/5726706/pexels-photo-5726706.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
+    try {
+      const formData = new FormData();
       
       if (activeTab === 'image' && imageFile) {
-        resultImageUrl = URL.createObjectURL(imageFile);
+        formData.append('file', imageFile);
+      } else if (activeTab === 'pdf' && pdfFile) {
+        formData.append('file', pdfFile);
+      } else if (activeTab === 'url' && imageUrl) {
+        formData.append('url', imageUrl);
       }
+
+      const response = await fetch('http://localhost:5000/api/analyze', {
+        method: 'POST',
+        body: activeTab === 'url'
+          ? JSON.stringify({ url: imageUrl })
+          : formData,
+        headers: activeTab === 'url'
+          ? { 'Content-Type': 'application/json' }
+          : undefined
+      });
+
+      const result = await response.json();
       
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      let resultImageUrl = '';
+      if (activeTab === 'image' && imageFile) {
+        resultImageUrl = URL.createObjectURL(imageFile);
+      } else if (activeTab === 'pdf' && pdfFile) {
+        resultImageUrl = URL.createObjectURL(pdfFile);
+      } else {
+        resultImageUrl = imageUrl;
+      }
+
       onResultGenerated({
         imageUrl: resultImageUrl,
-        densityValue: Math.random() * 10 + 5,
+        densityValue: result.confidence * 10 + 5, // Map confidence to density scale
         status: 'success',
-        message: 'Analysis completed successfully'
+        message: `Prediction: ${result.prediction} (Confidence: ${(result.confidence * 100).toFixed(1)}%)`
       });
-    }, 2000);
+    } catch (err) {
+      onResultGenerated({
+        imageUrl: '',
+        densityValue: 0,
+        status: 'error',
+        message: err instanceof Error ? err.message : 'Analysis failed'
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
