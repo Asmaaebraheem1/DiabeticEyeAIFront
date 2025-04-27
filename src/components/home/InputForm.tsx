@@ -75,7 +75,7 @@ const InputForm: React.FC<InputFormProps> = ({ onResultGenerated }) => {
         formData.append('url', imageUrl);
       }
 
-      const response = await fetch('http://localhost:5000/api/analyze', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/analyze`, {
         method: 'POST',
         body: activeTab === 'url'
           ? JSON.stringify({ url: imageUrl })
@@ -96,7 +96,7 @@ const InputForm: React.FC<InputFormProps> = ({ onResultGenerated }) => {
         resultImageUrl = URL.createObjectURL(imageFile);
       } else if (activeTab === 'pdf') {
         resultImageUrl = result.extracted_image
-          ? `http://localhost:5000/temp_images/${result.extracted_image}`
+          ? `${import.meta.env.VITE_API_URL}/temp_images/${result.extracted_image}`
           : pdfFile ? URL.createObjectURL(pdfFile) : '';
       } else {
         resultImageUrl = imageUrl;
