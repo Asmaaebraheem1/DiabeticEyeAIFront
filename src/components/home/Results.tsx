@@ -60,39 +60,38 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                           </span>
                         </div>
                         
-                        {result.densityValue && (
-                          <div className="mt-4">
-                            <p className="text-gray-700 font-medium mb-2">Severity Level:</p>
-                            <div className="text-3xl font-bold text-blue-600">
-                              {result.densityValue.toFixed(2)}
-                            </div>
-                            <div className="mt-2 h-4 bg-gray-200 rounded-full overflow-hidden">
-                              <div 
-                                className="h-full bg-gradient-to-r from-blue-500 to-teal-500"
-                                style={{ width: `${Math.min(result.densityValue * 10, 100)}%` }}
-                              ></div>
-                            </div>
-                            <p className="mt-4 text-sm text-gray-600">
-                              The analysis indicates {
-                                result.densityValue < 8 ? 'mild' :
-                                result.densityValue > 12 ? 'severe' :
-                                'moderate'
-                              } signs of diabetic retinopathy.
-                            </p>
-                          </div>
-                        )}
-                        
                         {result.message && (
-                          <p className="mt-4 text-gray-700">
-                            <span className="font-medium">Analysis Notes: </span> 
-                            {result.message}
-                          </p>
+                          <div className="mt-6 space-y-4">
+                            <div>
+                              <p className="text-gray-700 font-medium mb-2">Prediction:</p>
+                              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                {result.message.split('(')[0].replace('Prediction: ', '').trim()}
+                              </span>
+                            </div>
+                            
+                            {result.message.includes('Confidence:') && (
+                              <div>
+                                <p className="text-gray-700 font-medium mb-2">Confidence:</p>
+                                <div className="w-full bg-gray-200 rounded-full h-2.5">
+                                  <div
+                                    className="bg-blue-600 h-2.5 rounded-full"
+                                    style={{
+                                      width: `${parseFloat(result.message.match(/Confidence: (\d+\.?\d*)%/)?.[1] || '0')}%`
+                                    }}
+                                  ></div>
+                                </div>
+                                <p className="text-sm text-gray-500 mt-1">
+                                  {result.message.match(/Confidence: (\d+\.?\d*)%/)?.[0]}
+                                </p>
+                              </div>
+                            )}
+                          </div>
                         )}
                       </div>
                       
-                      <button className="w-full mt-4 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors">
+                      {/* <button className="w-full mt-4 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors">
                         Download Report
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 </div>

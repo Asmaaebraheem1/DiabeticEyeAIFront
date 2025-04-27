@@ -94,8 +94,10 @@ const InputForm: React.FC<InputFormProps> = ({ onResultGenerated }) => {
       let resultImageUrl = '';
       if (activeTab === 'image' && imageFile) {
         resultImageUrl = URL.createObjectURL(imageFile);
-      } else if (activeTab === 'pdf' && pdfFile) {
-        resultImageUrl = URL.createObjectURL(pdfFile);
+      } else if (activeTab === 'pdf') {
+        resultImageUrl = result.extracted_image
+          ? `http://localhost:5000/temp_images/${result.extracted_image}`
+          : pdfFile ? URL.createObjectURL(pdfFile) : '';
       } else {
         resultImageUrl = imageUrl;
       }
