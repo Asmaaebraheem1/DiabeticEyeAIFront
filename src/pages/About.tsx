@@ -54,7 +54,7 @@ const About: React.FC = () => {
                 <Activity size={32} />
               </div>
               <h3 className="text-xl font-semibold mb-3">High Precision</h3>
-              <p className="text-gray-600">Our AI provides measurements with 98.7% accuracy, exceeding manual methods.</p>
+              <p className="text-gray-600">Our AI provides measurements with 95% accuracy, exceeding manual methods.</p>
             </div>
             
             <div className="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow">
@@ -90,11 +90,24 @@ const About: React.FC = () => {
             <h2 className="text-3xl font-bold mb-8 text-gray-800">Our Team</h2>
             
             <p className="text-lg text-gray-700 mb-12">
-              BloodDensityAI is the result of collaboration between medical researchers, 
+             DiabeticEyeAI is the result of collaboration between medical researchers, 
               AI specialists, and software engineers committed to advancing healthcare 
               through technology.
             </p>
             
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="w-24 h-24 bg-blue-200 rounded-full mx-auto mb-4"></div>
+                <h3 className="text-xl font-semibold">Dr. am Johnson</h3>
+                <p className="text-gray-600">Lead Medical Researcher</p>
+              </div>
+              
+              <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="w-24 h-24 bg-indigo-200 rounded-full mx-auto mb-4"></div>
+                <h3 className="text-xl font-semibold">dr . amera Maria Rodriguez</h3>
+                <p className="text-gray-600">Software Development Lead</p>
+              </div>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-gray-50 p-6 rounded-lg">
                 <div className="w-24 h-24 bg-blue-200 rounded-full mx-auto mb-4"></div>
@@ -113,6 +126,20 @@ const About: React.FC = () => {
                 <h3 className="text-xl font-semibold">Maria Rodriguez</h3>
                 <p className="text-gray-600">Software Development Lead</p>
               </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="w-24 h-24 bg-blue-200 rounded-full mx-auto mb-4"></div>
+                <h3 className="text-xl font-semibold">Dr. Sarah Johnson</h3>
+                <p className="text-gray-600">Lead Medical Researcher</p>
+              </div>
+              
+              <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="w-24 h-24 bg-teal-200 rounded-full mx-auto mb-4"></div>
+                <h3 className="text-xl font-semibold">Alex Chen</h3>
+                <p className="text-gray-600">AI Algorithm Specialist</p>
+              </div>
+              
             </div>
           </div>
         </div>
